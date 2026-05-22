@@ -2,9 +2,9 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {UniswapV2ERC20} from "../src/UniSwapV2ERC20.sol";
+import {UniSwapV2ERC20} from "../src/UniSwapV2ERC20.sol";
 
-contract UniswapV2ERC20TestHarness is UniswapV2ERC20 {
+contract UniSwapV2ERC20TestHarness is UniSwapV2ERC20 {
     function mint(address to, uint256 value) external {
         _mint(to, value);
     }
@@ -14,8 +14,8 @@ contract UniswapV2ERC20TestHarness is UniswapV2ERC20 {
     }
 }
 
-contract UniswapV2ERC20Test is Test {
-    UniswapV2ERC20TestHarness private token;
+contract UniSwapV2ERC20Test is Test {
+    UniSwapV2ERC20TestHarness private token;
 
     address private alice = makeAddr("alice");
     address private bob = makeAddr("bob");
@@ -25,7 +25,7 @@ contract UniswapV2ERC20Test is Test {
     uint256 private constant INITIAL_SUPPLY = 1_000 ether;
 
     function setUp() public {
-        token = new UniswapV2ERC20TestHarness();
+        token = new UniSwapV2ERC20TestHarness();
         token.mint(alice, INITIAL_SUPPLY);
     }
 
@@ -55,7 +55,7 @@ contract UniswapV2ERC20Test is Test {
         uint256 amount = 100 ether;
 
         vm.expectEmit(true, true, false, true);
-        emit UniswapV2ERC20.Transfer(address(0), bob, amount);
+        emit UniSwapV2ERC20.Transfer(address(0), bob, amount);
 
         token.mint(bob, amount);
 
@@ -68,7 +68,7 @@ contract UniswapV2ERC20Test is Test {
         uint256 amount = 200 ether;
 
         vm.expectEmit(true, true, false, true);
-        emit UniswapV2ERC20.Transfer(alice, address(0), amount);
+        emit UniSwapV2ERC20.Transfer(alice, address(0), amount);
 
         token.burn(alice, amount);
 
@@ -92,7 +92,7 @@ contract UniswapV2ERC20Test is Test {
         uint256 amount = 25 ether;
 
         vm.expectEmit(true, true, false, true);
-        emit UniswapV2ERC20.Transfer(alice, bob, amount);
+        emit UniSwapV2ERC20.Transfer(alice, bob, amount);
 
         vm.prank(alice);
         token.transfer(bob, amount);
@@ -113,7 +113,7 @@ contract UniswapV2ERC20Test is Test {
         uint256 amount = 10 ether;
 
         vm.expectEmit(true, true, false, true);
-        emit UniswapV2ERC20.Approval(alice, bob, amount);
+        emit UniSwapV2ERC20.Approval(alice, bob, amount);
 
         vm.prank(alice);
         token.approve(bob, amount);

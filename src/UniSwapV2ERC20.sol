@@ -7,7 +7,7 @@ pragma solidity ^0.8.24;
 /// @dev This is the base contract that UniswapV2Pair inherits from.
 
 
-contract UniswapV2ERC20 {
+contract UniSwapV2ERC20 {
 
       // -- Type declarations (none here) --
 
