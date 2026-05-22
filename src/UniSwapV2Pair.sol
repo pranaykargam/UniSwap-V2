@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import "./UniSwapV2ERC20.sol";
 
-/// @title UniswapV2Pair — State and Initialization (Reference)
+/// @title UniswapV2Pair — State and Initialization 
 contract UniswapV2Pair is UniSwapV2ERC20 {
     uint256 public constant MINIMUM_LIQUIDITY = 10 ** 3;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes("transfer(address,uint256)")));
