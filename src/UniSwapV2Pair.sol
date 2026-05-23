@@ -2,9 +2,11 @@
 pragma solidity >=0.8.0;
 
 import "./UniSwapV2ERC20.sol";
+import "./UQ112x112.sol";
 
-/// @title UniswapV2Pair — State and Initialization 
+/// @title UniswapV2Pair — State, TWAP oracle, and initialization
 contract UniswapV2Pair is UniSwapV2ERC20 {
+    using UQ112x112 for uint224;
     uint256 public constant MINIMUM_LIQUIDITY = 10 ** 3;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes("transfer(address,uint256)")));
 
@@ -58,6 +60,22 @@ contract UniswapV2Pair is UniSwapV2ERC20 {
     function _safeTransfer(address token, address to, uint256 value) private {
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
         require(success && (data.length == 0 || abi.decode(data, (bool))), "UniswapV2: TRANSFER_FAILED");
+    }
+
+    function _update(uint256 balance0, uint256 balance1, uint112 _reserve0, uint112 _reserve1) internal {
+        require(balance0 <= type(uint112).max && balance1 <= type(uint112).max, "UniswapV2: OVERFLOW");
+        uint32 blockTimestamp = uint32(block.timestamp % 2 ** 32);
+        uint32 timeElapsed = blockTimestamp - blockTimestampLast;
+        if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
+            unchecked {
+                price0CumulativeLast += uint256(UQ112x112.encode(_reserve1).uqdiv(_reserve0)) * timeElapsed;
+                price1CumulativeLast += uint256(UQ112x112.encode(_reserve0).uqdiv(_reserve1)) * timeElapsed;
+            }
+        }
+        reserve0 = uint112(balance0);
+        reserve1 = uint112(balance1);
+        blockTimestampLast = blockTimestamp;
+        emit Sync(reserve0, reserve1);
     }
 
     function initialize(address _token0, address _token1) external {

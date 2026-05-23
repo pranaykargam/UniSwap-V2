@@ -99,7 +99,7 @@ contract UniSwapV2ERC20 {
         require(deadline >= block.timestamp, "UniswapV2: EXPIRED");
         bytes32 digest = keccak256(
             abi.encodePacked(
-                "\x19\x01",
+                "\x19\x01", // -- EIP-712 header (2 bytes)
                 DOMAIN_SEPARATOR,
                 keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, nonces[owner]++, deadline))
             )
