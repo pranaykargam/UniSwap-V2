@@ -9,7 +9,6 @@ pragma solidity ^0.8.24;
 
 contract UniSwapV2ERC20 {
 
-      // -- Type declarations (none here) --
 
          // -- State variables (group similarly) --
     string public constant name = "Uniswap V2";
