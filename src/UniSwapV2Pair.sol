@@ -62,6 +62,9 @@ contract UniswapV2Pair is UniSwapV2ERC20 {
         require(success && (data.length == 0 || abi.decode(data, (bool))), "UniswapV2: TRANSFER_FAILED");
     }
 
+ // Updates reserves AND accumulates cumulative prices for TWAP oracle.
+// Uses UQ112x112 fixed-point encoding for fractional price precision.
+
     function _update(uint256 balance0, uint256 balance1, uint112 _reserve0, uint112 _reserve1) internal {
         require(balance0 <= type(uint112).max && balance1 <= type(uint112).max, "UniswapV2: OVERFLOW");
         uint32 blockTimestamp = uint32(block.timestamp % 2 ** 32);
