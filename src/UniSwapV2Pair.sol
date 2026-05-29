@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import "./UniSwapV2ERC20.sol";
-import "./UQ112x112.sol";
+import "../libraries/UQ112x112.sol";
 
 /// @title Math library for min and sqrt functions
 library Math {
