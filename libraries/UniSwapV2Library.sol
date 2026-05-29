@@ -73,21 +73,31 @@ library UniswapV2Library {
     }
 
 //quote gives you the fair market value without fees —
-
 // amountB = (amountA * reserveB) / reserveA;
-    function quote(
+    function quote (
         uint256 amountA,
         uint256 reserveA,
         uint256 reserveB
-    ) internal pure returns (uint256 amountB) {
-        require(amountA > 0, "UniswapV2Library: INSUFFICIENT_AMOUNT");
-        require(
-            reserveA > 0 && reserveB > 0,
-            "UniswapV2Library: INSUFFICIENT_LIQUIDITY"
+    )internal pure returns (uint256 amountB){
+        require (amountA > 0, "UniSwapV2Library: INSUFFICIENT_AMOUNT");
+        require (
+            reserveA>0 && reserveB>0,
+            "UniSwapV2Library:INSUFFICIENT_LIQUIDITY"
         );
-        amountB = (amountA * reserveB) / reserveA;
+        amountB = (amountA * amountB)/ reserveA; 
     }
 
+
+// amountIn (your input)
+   // ↓
+// amountIn × 997  (apply 0.3% fee, keep 99.7%)
+  //  ↓
+// numerator = amountInWithFee × reserveOut
+// denominator = reserveIn × 1000 + amountInWithFee
+  //   ↓
+// amountOut = numerator / denominator  (what you get)
+
+// amountIn is what you give, amountOut is what you get — 
     function getAmountOut(
         uint256 amountIn,
         uint256 reserveIn,
@@ -119,6 +129,18 @@ library UniswapV2Library {
         amountIn = numerator / denominator + 1;
     }
 
+
+
+//  🔹 getAmountsOut: "If I put in X tokens, how much will I get out?"
+//    → Calculates output amount for a given input across multiple token hops 
+
+// 🔹 getAmountsIn: "If I want Y tokens, how much do I need to put in?"
+//    → Calculates required input amount for a desired output across multiple token hops 
+
+// | Function      | Question it answers                                |
+// | ------------- | -------------------------------------------------- |
+// | getAmountsOut | "I have 100 USDC, how much ETH will I get?" github |
+// | getAmountsIn  | "I want 1 ETH, how much USDC do I need?" github    |
     function getAmountsOut(
         address factory,
         uint256 amountIn,
