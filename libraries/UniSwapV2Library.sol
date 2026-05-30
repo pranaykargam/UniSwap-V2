@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.24;
 
+import "../src/interfaces/IUniswapV2Pair.sol";
+
 // @title UniSwapV2Library
-
-
 
 /// @notice Uniswap V2 helper library (not a contract)
 /// @dev Library because:
@@ -180,11 +180,3 @@ library UniSwapV2Library {
     }
 }
 
-interface IUniswapV2Pair {
-    function mint(address to) external returns (uint256 liquidity);
-
-    function getReserves()
-        external
-        view
-        returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
-}

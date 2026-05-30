@@ -6,6 +6,7 @@ pragma solidity ^0.8.24;
 
 import "./UniSwapV2Factory.sol";
 import {UniSwapV2Library} from "../libraries/UniSwapV2Library.sol";
+import "./interfaces/IUniswapV2Pair.sol";
 
 
 // @title UniswapV2Router02 — Remove Liquidity — Reference Implementation
@@ -114,12 +115,6 @@ contract UniSwapV2Router02 {
         IUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
         (amountToken, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
     }
-}
-
-interface IUniswapV2Pair {
-    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external;
-    function burn(address to) external returns (uint256 amount0, uint256 amount1);
-    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
 }
 
 interface IWETH {

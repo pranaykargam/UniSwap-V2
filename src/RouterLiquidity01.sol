@@ -3,15 +3,12 @@ pragma solidity ^0.8.24;
 
 import "./UniSwapV2Factory.sol";
 import "../libraries/UniSwapV2Library.sol";
+import "./interfaces/IUniswapV2Pair.sol";
 
 interface IWETH {
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
 }
-
-// interface IUniswapV2Pair {
-//     function mint(address to) external returns (uint256 liquidity);
-// }
 
 contract RouterLiquidity {
     address public immutable factory;
