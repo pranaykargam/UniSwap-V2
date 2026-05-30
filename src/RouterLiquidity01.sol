@@ -1,20 +1,28 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.24;
 
 import "./UniSwapV2Factory.sol";
 import "../libraries/UniSwapV2Library.sol";
-import "./UniSwapV2Pair.sol";
+
+interface IWETH {
+    function deposit() external payable;
+    function transfer(address to, uint256 value) external returns (bool);
+}
+
+// interface IUniswapV2Pair {
+//     function mint(address to) external returns (uint256 liquidity);
+// }
+
 contract RouterLiquidity {
     address public immutable factory;
     address public immutable WETH;
 
     modifier ensure(uint256 deadline) {
-        require(deadline >= block.timestamp, "UniswapV2Router: EXPIRED");
+        require(deadline >= block.timestamp, "UniSwapV2Router: EXPIRED");
         _;
     }
 
-     constructor(address _factory, address _WETH) {
+    constructor(address _factory, address _WETH) {
         factory = _factory;
         WETH = _WETH;
     }
@@ -42,11 +50,7 @@ contract RouterLiquidity {
         require(success, "TransferHelper: ETH_TRANSFER_FAILED");
     }
 
-
-// “We are importing the user tokens and it checks the liquidity checks and if all good it will create
-//  the special create pair for it through factory or else reverts”
-
-     function _addLiquidity(
+    function _addLiquidity(
         address tokenA,
         address tokenB,
         uint256 amountADesired,
@@ -63,12 +67,12 @@ contract RouterLiquidity {
         } else {
             uint256 amountBOptimal = UniSwapV2Library.quote(amountADesired, reserveA, reserveB);
             if (amountBOptimal <= amountBDesired) {
-                require(amountBOptimal >= amountBMin, "UniswapV2Router: INSUFFICIENT_B_AMOUNT");
+                require(amountBOptimal >= amountBMin, "UniSwapV2Router: INSUFFICIENT_B_AMOUNT");
                 (amountA, amountB) = (amountADesired, amountBOptimal);
             } else {
                 uint256 amountAOptimal = UniSwapV2Library.quote(amountBDesired, reserveB, reserveA);
                 assert(amountAOptimal <= amountADesired);
-                require(amountAOptimal >= amountAMin, "UniswapV2Router: INSUFFICIENT_A_AMOUNT");
+                require(amountAOptimal >= amountAMin, "UniSwapV2Router: INSUFFICIENT_A_AMOUNT");
                 (amountA, amountB) = (amountAOptimal, amountBDesired);
             }
         }
@@ -85,7 +89,7 @@ contract RouterLiquidity {
         uint256 deadline
     ) external ensure(deadline) returns (uint256 amountA, uint256 amountB, uint256 liquidity) {
         (amountA, amountB) = _addLiquidity(tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin);
-        address pair = UniswapV2Library.pairFor(factory, tokenA, tokenB);
+        address pair = UniSwapV2Library.pairFor(factory, tokenA, tokenB);
         safeTransferFrom(tokenA, msg.sender, pair, amountA);
         safeTransferFrom(tokenB, msg.sender, pair, amountB);
         liquidity = IUniswapV2Pair(pair).mint(to);
@@ -100,7 +104,7 @@ contract RouterLiquidity {
         uint256 deadline
     ) external payable ensure(deadline) returns (uint256 amountToken, uint256 amountETH, uint256 liquidity) {
         (amountToken, amountETH) = _addLiquidity(token, WETH, amountTokenDesired, msg.value, amountTokenMin, amountETHMin);
-        address pair = UniswapV2Library.pairFor(factory, token, WETH);
+        address pair = UniSwapV2Library.pairFor(factory, token, WETH);
         safeTransferFrom(token, msg.sender, pair, amountToken);
         IWETH(WETH).deposit{value: amountETH}();
         assert(IWETH(WETH).transfer(pair, amountETH));
@@ -108,5 +112,3 @@ contract RouterLiquidity {
         if (msg.value > amountETH) safeTransferETH(msg.sender, msg.value - amountETH);
     }
 }
-
-

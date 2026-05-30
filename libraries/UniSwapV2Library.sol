@@ -3,13 +3,15 @@ pragma solidity ^0.8.24;
 
 // @title UniSwapV2Library
 
+
+
 /// @notice Uniswap V2 helper library (not a contract)
 /// @dev Library because:
 ///   - No state/storage, only utility functions
 ///   - Reusable across contracts (e.g. routers)
 ///   - Internal calls are inlined for gas efficiency
 ///   - Cannot receive Ether or inherit, only pure/view helpers
-library UniswapV2Library {
+library UniSwapV2Library {
     bytes32 internal constant INIT_CODE_HASH =
         hex"96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f";
 
@@ -84,7 +86,7 @@ library UniswapV2Library {
             reserveA>0 && reserveB>0,
             "UniSwapV2Library:INSUFFICIENT_LIQUIDITY"
         );
-        amountB = (amountA * amountB)/ reserveA; 
+        amountB = (amountA * reserveB)/ reserveA; 
     }
 
 
@@ -179,6 +181,8 @@ library UniswapV2Library {
 }
 
 interface IUniswapV2Pair {
+    function mint(address to) external returns (uint256 liquidity);
+
     function getReserves()
         external
         view
