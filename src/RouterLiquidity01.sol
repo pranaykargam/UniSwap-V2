@@ -1,18 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "./UniSwapV2Factory.sol";
+import   "./UniSwapV2Factory.sol";
 import "../libraries/UniSwapV2Library.sol";
-import "./interfaces/IUniswapV2Pair.sol";
+import  "./interfaces/IUniswapV2Pair.sol";
 
+
+
+// We use IWETH to wrap native ETH into WETH (ERC20) so Uniswap can trade it, since the pool only accepts ERC20 tokens
+// deposit() converts ETH → WETH, and transfer() sends WETH to the liquidity pair or user
+// 1 ETH  →  wrap it  →  1 WETH (ERC20 token)
 interface IWETH {
     function deposit() external payable;
-    function transfer(address to, uint256 value) external returns (bool);
+    function transfer (address to, uint256 value) external returns (bool);
 }
+
+
 
 contract RouterLiquidity {
     address public immutable factory;
     address public immutable WETH;
+
+    //Checks that the transaction's deadline hasn't passed before executing
 
     modifier ensure(uint256 deadline) {
         require(deadline >= block.timestamp, "UniSwapV2Router: EXPIRED");
@@ -24,6 +33,9 @@ contract RouterLiquidity {
         WETH = _WETH;
     }
 
+    // User calls: WETH.withdraw(amount)
+   // WETH contract sends ETH back to router via receive()
+   // assert(msg.sender == WETH) passes because WETH contract sent it
     receive() external payable {
         assert(msg.sender == WETH);
     }
@@ -47,6 +59,8 @@ contract RouterLiquidity {
         require(success, "TransferHelper: ETH_TRANSFER_FAILED");
     }
 
+
+// Pure calculation logic — no token transfers
     function _addLiquidity(
         address tokenA,
         address tokenB,
@@ -75,6 +89,9 @@ contract RouterLiquidity {
         }
     }
 
+
+//  Transfer tokens + mint LP tokens
+
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -92,6 +109,8 @@ contract RouterLiquidity {
         liquidity = IUniswapV2Pair(pair).mint(to);
     }
 
+
+// Handle native ETH differently
     function addLiquidityETH(
         address token,
         uint256 amountTokenDesired,

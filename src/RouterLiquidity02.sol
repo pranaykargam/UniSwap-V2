@@ -9,7 +9,7 @@ import {UniSwapV2Library} from "../libraries/UniSwapV2Library.sol";
 import "./interfaces/IUniswapV2Pair.sol";
 
 
-// @title UniswapV2Router02 — Remove Liquidity — Reference Implementation
+// @title UniswapV2Router02 — Remove Liquidity — 
 contract UniSwapV2Router02 {
     address public immutable factory;
     address public immutable WETH;
@@ -47,6 +47,8 @@ contract UniSwapV2Router02 {
         require(success, "TransferHelper: ETH_TRANSFER_FAILED");
     }
 
+
+//removeLiquidity returns both tokens as ERC20s
     function removeLiquidity(
         address tokenA,
         address tokenB,
@@ -64,6 +66,8 @@ contract UniSwapV2Router02 {
         require(amountA >= amountAMin, "UniswapV2Router: INSUFFICIENT_A_AMOUNT");
         require(amountB >= amountBMin, "UniswapV2Router: INSUFFICIENT_B_AMOUNT");
     }
+
+    // removeLiquidityETH returns one asset as actual ETH (since ETH is the native token, not an ERC20)
 
     function removeLiquidityETH(
         address token,
