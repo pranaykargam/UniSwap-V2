@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 
-import './UniswapV2Pair.sol';
+import "./UniSwapV2Pair.sol";
 
 contract UniswapV2Factory {
     address public feeTo;
