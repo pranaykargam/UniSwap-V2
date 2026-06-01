@@ -94,6 +94,7 @@ contract UniswapV2Pair is UniSwapV2ERC20 {
         require(success && (data.length == 0 || abi.decode(data, (bool))), "UniswapV2: TRANSFER_FAILED");
     }
 
+// TWAP (Time-Weighted Average Price) mechanism calculates the average token price over time to prevent price manipulation.
  // Updates reserves AND accumulates cumulative prices for TWAP oracle.
 // Uses UQ112x112 fixed-point encoding for fractional price precision.
 
@@ -112,6 +113,10 @@ contract UniswapV2Pair is UniSwapV2ERC20 {
         blockTimestampLast = blockTimestamp;
         emit Sync(reserve0, reserve1);
     }
+
+    // It calls after the creation of two token once .
+    // which two tokens this liquidity pool will facilitate swaps between.
+    // After initialization, the pair contract is ready to accept liquidity and perform swaps.
 
     function initialize(address _token0, address _token1) external {
         require(msg.sender == factory, "UniswapV2: FORBIDDEN");
@@ -223,8 +228,14 @@ contract UniswapV2Pair is UniSwapV2ERC20 {
     }
 
 
+// What sync() / skim() do during an emergency
+// Without the router, anyone can call these functions directly on the pair (they're public). When you call them:
 
- // force balances to match reserves
+// sync() and skim() don't execute a trade — they only fix the reserve variables.
+//  The actual swap (with proper pricing) happens when someone later calls swap(), 
+
+
+// Transfers excess tokens out of the pair (balance − reserve) to address to
     function skim(address to) external lock {
         address _token0 = token0; // gas savings
         address _token1 = token1; // gas savings
@@ -232,7 +243,7 @@ contract UniswapV2Pair is UniSwapV2ERC20 {
         _safeTransfer(_token1, to, IERC20(_token1).balanceOf(address(this)) - reserve1);
     }
 
-    // force reserves to match balances
+  // Updates reserve0 and reserve1 to match current token balances
     function sync() external lock {
         _update(IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)), reserve0, reserve1);
     }

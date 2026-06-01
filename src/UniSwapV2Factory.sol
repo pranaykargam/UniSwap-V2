@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 
-import "./UniSwapV2Pair.sol";
+import './UniswapV2Pair.sol';
 
 contract UniswapV2Factory {
     address public feeTo;
@@ -11,7 +11,12 @@ contract UniswapV2Factory {
     mapping(address => mapping(address => address)) public getPair;
     address[] public allPairs;
 
+    // event is emitted when a new token pair is created.
+    // Identify when pairs are created.
+    //Track which tokens are involved.
+   // Index the data for frontend applications to query.
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
+
 
     constructor(address _feeToSetter) {
         feeToSetter = _feeToSetter;
@@ -21,6 +26,8 @@ contract UniswapV2Factory {
         return allPairs.length;
     }
 
+
+// Uniswap V2 was written in Solidity 0.5, which had no native create2 syntax → required assembly
     function createPair(address tokenA, address tokenB) external returns (address pair) {
         require(tokenA != tokenB, 'UniswapV2: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
@@ -37,6 +44,20 @@ contract UniswapV2Factory {
         allPairs.push(pair);
         emit PairCreated(token0, token1, pair, allPairs.length);
     }
+
+
+  // feeToSetter (ADMIN)
+   //   ↓
+  // Can call: setFeeTo(new_address) //Fee recipient address
+   //   ↓
+  //     Sets feeTo = new_address
+  //    ↓
+  // Protocol fees (0.05%) go to feeTo address
+
+  // setFeeTo and setFeeToSetter are the two key functions that control how the protocol fee is managed,
+  // but they do not directly set the fee percentage.
+
+
 
     function setFeeTo(address _feeTo) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');

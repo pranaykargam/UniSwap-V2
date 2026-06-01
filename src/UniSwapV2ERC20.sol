@@ -31,6 +31,11 @@ pragma solidity ^0.8.24;
 /// @dev This is the base contract that UniswapV2Pair inherits from.
 
 
+// implements the ERC20 token standard for Uniswap V2 liquidity pool tokens (also called LP tokens or pair tokens).
+// It tracks ownership of liquidity pool shares. When liquidity providers add funds to a pool, they receive these ERC20 tokens representing their share of the pool.
+// It manages permit functionality (gasless approvals via signed messages) using EIP-2612
+// ERC-20 = "Ethereum Request for Comments 20" 
+
 contract UniSwapV2ERC20 {
 
 
@@ -57,6 +62,8 @@ contract UniSwapV2ERC20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
+// ## immutable + constructor
+// 	Factory/WETH set once at deploy, stored in bytecode (not storage), can never change
     constructor() {
         DOMAIN_SEPARATOR = keccak256(
             abi.encode(
@@ -110,6 +117,16 @@ contract UniSwapV2ERC20 {
         _transfer(from, to, value);
         return true;
     }
+
+
+    // ecrecover(digest, v, r, s) is a Solidity built-in function that recovers the signer's Ethereum address from a digital signature.
+    // Parameters:
+      // digest — the hash of the message/data that was signed
+      // v — recovery identifier (27 or 28, tells which public key to recover)
+      // r — first part of the ECDSA signature (32 bytes)
+      // s — second part of the ECDSA signature (32 bytes)
+      // Returns: The address of the private key holder who signed the message.
+
 
     function permit(
         address owner,
