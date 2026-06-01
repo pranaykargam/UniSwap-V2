@@ -9,8 +9,7 @@ import "../src/interfaces/IUniswapV2Pair.sol";
 /// @dev Library because:
 ///   - No state/storage, only utility functions
 ///   - Reusable across contracts (e.g. routers)
-///   - Internal calls are inlined for gas efficiency
-///   - Cannot receive Ether or inherit, only pure/view helpers
+
 library UniSwapV2Library {
     bytes32 internal constant INIT_CODE_HASH =
         hex"00a56cae84d2ec4a7c05d03aedb78975c00a78228e2f62cce256610e69262fb7";
