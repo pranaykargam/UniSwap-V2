@@ -19,6 +19,8 @@
 
 > **Key idea:** Uniswap V2 separates the protocol into **core contracts** that protect pool funds and **periphery contracts** that make the protocol easier to use.
 
+<img src =  "./images/UniSwapV2-05.png">
+
 | Layer | Contract / Library | Role |
 | --- | --- | --- |
 | Core | `UniSwapV2ERC20` | LP token base contract with `permit` support |
