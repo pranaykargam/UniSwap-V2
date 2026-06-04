@@ -2,10 +2,10 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {UniswapV2Factory} from "../src/UniSwapV2Factory.sol";
-import {UniswapV2Pair} from "../src/UniSwapV2Pair.sol";
-import {UniswapV2Router02 as RouterSwap} from "../src/RouterSwap.sol";
-import {FeeOnTransfer as RouterFeeOnTransfer} from "../src/RouterFeeOnTransfer.sol";
+import {UniswapV2Factory} from "../v2-core/UniSwapV2Factory.sol";
+import {UniswapV2Pair} from "../v2-core/UniSwapV2Pair.sol";
+import {UniswapV2Router02 as RouterSwap} from "../v2-periphery/RouterSwap.sol";
+import {FeeOnTransfer as RouterFeeOnTransfer} from "../v2-periphery/RouterFeeOnTransfer.sol";
 import {UniSwapV2Library} from "../libraries/UniSwapV2Library.sol";
 
 contract MockERC20 {

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import   "./UniSwapV2Factory.sol";
+import "../v2-core/UniSwapV2Factory.sol";
 import "../libraries/UniSwapV2Library.sol";
-import  "./interfaces/IUniswapV2Pair.sol";
+import "../src/interfaces/IUniswapV2Pair.sol";
 
 
 

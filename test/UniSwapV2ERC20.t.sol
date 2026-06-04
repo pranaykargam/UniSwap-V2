@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {UniSwapV2ERC20} from "../src/UniSwapV2ERC20.sol";
+import {UniSwapV2ERC20} from "../v2-core/UniSwapV2ERC20.sol";
 
 contract UniSwapV2ERC20TestHarness is UniSwapV2ERC20 {
     function mint(address to, uint256 value) external {

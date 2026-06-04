@@ -3,9 +3,9 @@
 
 pragma solidity ^0.8.24; 
 
-import "./UniSwapV2Factory.sol";
+import "../v2-core/UniSwapV2Factory.sol";
 import {UniSwapV2Library} from "../libraries/UniSwapV2Library.sol";
-import "./interfaces/IUniswapV2Pair.sol";
+import "../src/interfaces/IUniswapV2Pair.sol";
 
 interface IUniswapV2PairSwap is IUniswapV2Pair {
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
