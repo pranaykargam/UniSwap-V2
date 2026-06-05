@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0;
 
+// the library is mainly for precision math
 library UQ112x112 {
     uint224 constant Q112 = 2 ** 112;
 
