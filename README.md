@@ -224,6 +224,8 @@ The library keeps common AMM math and address logic outside the router contracts
 
 ## 11. UQ112x112 Library
 
+<img src  = "./images/UniSwapV2-06.png">
+
 `UQ112x112` is a fixed-point math library used by the pair contract for price accumulation. Solidity does not support floating-point numbers, so Uniswap V2 stores prices using fixed-point integers.
 
 This helps the pair track time-weighted average prices (TWAPs), which can be used by oracle systems.
