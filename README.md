@@ -198,7 +198,7 @@ This encourages traders to quote **large size** to move to the front of the queu
 **Price chooses the level. Time or size chooses the queue.**
 
 
-https://www.highcharts.com/demo/stock/orderbook-chart
+
 
 ## 3. Order Book vs AMM
 
