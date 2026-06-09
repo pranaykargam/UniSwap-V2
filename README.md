@@ -54,7 +54,153 @@ Where `x` and `y` are the token reserves, and `k` is the constant product that t
 
 ---
 
-## 2. Order Book vs AMM
+## 2.Order Book
+
+# Order Book - Quant Intuition
+
+> An order book is a list of buy and sell orders for a specific asset, organized by **time-price priority**. It answers: **who trades next, at what price, and for how much** when new orders arrive.
+
+---
+
+## PS5 Example: Intuition
+
+GameStop is the only seller of PS5s, and many buyers quote the maximum price they are willing to pay.
+
+- GameStop sells to the **highest bidder**.
+- If multiple buyers are at that highest price, it fills them in the **order they arrived**.
+- This is exactly how an order book works: **price decides the level**, and **time decides your queue position** at that level.
+
+---
+
+## Level 1 (L1): Best Bid / Ask
+
+L1, or **level 1**, shows only the **best bid** and **best ask**. This is the top of the book.
+
+| Term | Meaning |
+| --- | --- |
+| Best bid | Highest price someone is currently willing to buy |
+| Best ask | Lowest price someone is currently willing to sell |
+| Spread | Difference between best ask and best bid |
+
+Example:
+
+```text
+Best bid = 100
+Best ask = 110
+Spread   = 10
+```
+
+This is called a **one-dimensional view** because you only see one price on each side.
+
+---
+
+## Level 2 (L2): Market by Price (MBP)
+
+L2 extends beyond the best bid and ask to show **multiple price levels** on both sides.
+
+For each price level, you see:
+
+- Price
+- Total aggregated quantity at that price
+- Count of participants at that price
+
+### Example Bids
+
+| Price | Quantity | Participants |
+| --- | ---: | ---: |
+| 100 | 5 | 1 |
+| 90 | 10 | 2 |
+
+### Example Asks
+
+| Price | Quantity | Participants |
+| --- | ---: | ---: |
+| 110 | 5 | 2 |
+| 120 | 1 | 1 |
+
+You see **depth and total size per price**, but not individual orders.
+
+---
+
+## Level 3 (L3): Market by Order (MBO)
+
+L3 breaks each L2 level into **individual orders**.
+
+For each order, you see:
+
+- Order identifier
+- Quantity
+- Queue position at that price
+
+Example at ask `110`, where total quantity is `5` and there are `2` participants:
+
+| Order | Side | Quantity | Queue Position |
+| --- | --- | ---: | --- |
+| A | Sell | 3 units | Arrived earlier |
+| B | Sell | 2 units | Arrived later |
+
+Total quantity is still `5`, but L3 exposes **3 vs 2** and shows which order is ahead in the queue.
+
+---
+
+## Time-Price Priority (FIFO)
+
+Most markets use **time-price priority**, often called **FIFO**: first in, first out.
+
+> Better price wins across levels. Within the same price, earlier orders are filled first.
+
+Example fill at ask `110`:
+
+```text
+Resting orders:
+A = 3 units
+B = 2 units
+Total = 5
+
+New aggressive buy:
+1 unit at 110
+
+Fill:
+1 unit comes from A
+A goes from 3 -> 2
+Level total goes from 5 -> 4
+```
+
+Exchanges often give each order an ID that encodes its queue priority, so you can track where you are in line and how fills evolve over time.
+
+---
+
+## Pro-Rata Allocation
+
+**Pro-rata** is another queueing algorithm where priority at a given price depends on **size**, not arrival time.
+
+### PS5 Example
+
+| Buyer | Arrival | Wants | Price |
+| --- | --- | ---: | ---: |
+| You | 8 hours before launch | 1 PS5 | 300 |
+| Another buyer | 1 minute before launch | 10 PS5s | 300 |
+
+Under pro-rata, the larger `10` unit buyer is served first, or gets a larger share, despite arriving later.
+
+This encourages traders to quote **large size** to move to the front of the queue. That is why in some treasury markets you see big displayed quantities at the best prices.
+
+---
+
+## Short Mental Model
+
+| View | What You See | What You Do Not See |
+| --- | --- | --- |
+| L1 | Best bid and best ask | Depth behind the top price |
+| L2 | Price levels and total size | Individual orders |
+| L3 | Individual orders and queue position | Nothing hidden inside each shown level |
+
+**Price chooses the level. Time or size chooses the queue.**
+
+
+https://www.highcharts.com/demo/stock/orderbook-chart
+
+## 3. Order Book vs AMM
 
 **Order book exchanges** match buyers and sellers, so you need someone on the other side of your trade. **AMMs** like Uniswap V2 use liquidity pools, so you always trade against a pool of tokens, and prices update automatically with each swap.
 
@@ -68,7 +214,7 @@ For example, buying ETH with USDC on Uniswap means you interact with a pool, not
 
 <img src="./images/UniSwapV2-01.png">
 
-## 3. UniswapV2ERC20 (LP Token)
+## 4. UniswapV2ERC20 (LP Token)
 
 When you add liquidity to a Uniswap V2 pool, you get LP (liquidity provider) tokens. These represent your share of the pool. When you remove liquidity, your LP tokens are burned and you get your tokens back.
 
@@ -85,7 +231,7 @@ Only the pair contract can mint or burn LP tokens. This prevents abuse and ensur
 
 ---
 
-## 4. UniswapV2Pair
+## 5. UniswapV2Pair
 
 This is the smart contract that holds two ERC-20 tokens, tracks their reserves, and enforces the constant-product rule for swaps. It also mints/burns LP tokens and charges a small fee on each swap.
 
@@ -103,7 +249,7 @@ This is the smart contract that holds two ERC-20 tokens, tracks their reserves, 
 
 ---
 
-## 5. UniswapV2Factory
+## 6. UniswapV2Factory
 
 The factory contract creates new pair contracts for each token pair and keeps a registry of all pairs. It ensures each pair is unique and uses `CREATE2` for deterministic addresses.
 
@@ -122,7 +268,7 @@ The router and library can calculate the pair address before interacting with it
 
 <img src="./images/UniSwapV2-02.png">
 
-## 6. RouterLiquidity01 (Add Liquidity Router)
+## 7. RouterLiquidity01 (Add Liquidity Router)
 
 `RouterLiquidity01` is the periphery contract for adding liquidity. Users approve tokens to the router, and the router calculates the optimal token amounts before transferring assets into the pair and minting LP tokens.
 
@@ -146,7 +292,7 @@ The router and library can calculate the pair address before interacting with it
 
 ---
 
-## 7. RouterLiquidity02 (Remove Liquidity Router)
+## 8. RouterLiquidity02 (Remove Liquidity Router)
 
 `RouterLiquidity02` is the periphery contract for removing liquidity. Users transfer LP tokens back to the pair, the pair burns those LP tokens, and the user receives their proportional share of both pool assets.
 
@@ -167,7 +313,7 @@ Permit lets users approve LP token spending with a signature instead of sending 
 
 ---
 
-## 8. RouterSwap (Swap Router)
+## 9. RouterSwap (Swap Router)
 
 The swap router is the user-facing periphery contract for normal token swaps. Users approve tokens to the router, then the router calculates input/output amounts through the library, transfers tokens into the first pair, and calls each pair along the swap path.
 
@@ -186,7 +332,7 @@ The swap router is the user-facing periphery contract for normal token swaps. Us
 
 ---
 
-## 9. RouterFeeOnTransfer
+## 10. RouterFeeOnTransfer
 
 Some ERC-20 tokens take a fee whenever they are transferred, so the amount sent is not always the amount received by the pair. The fee-on-transfer router solves this by checking the pair's actual token balance after transfer, then calculating the output from the real amount that arrived.
 
@@ -203,7 +349,7 @@ Some ERC-20 tokens take a fee whenever they are transferred, so the amount sent 
 
 ---
 
-## 10. UniSwapV2Library
+## 11. UniSwapV2Library
 
 The library keeps common AMM math and address logic outside the router contracts. It sorts token addresses, calculates deterministic pair addresses with `CREATE2`, reads reserves in the right token order, quotes prices, and calculates swap amounts.
 
@@ -222,7 +368,7 @@ The library keeps common AMM math and address logic outside the router contracts
 
 ---
 
-## 11. UQ112x112 Library
+## 12. UQ112x112 Library
 
 <img src  = "./images/UniSwapV2-06.png">
 <img src  = "./images/UniV2-07.png">
