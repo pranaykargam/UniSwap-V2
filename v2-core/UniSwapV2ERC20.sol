@@ -21,7 +21,6 @@
 // external & public view & pure functions
 
 
-
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.24;
@@ -39,7 +38,7 @@ pragma solidity ^0.8.24;
 contract UniSwapV2ERC20 {
 
 
-         // -- State variables (group similarly) --
+         //  State variables (group similarly) 
     string public constant name = "Uniswap V2";
     string public constant symbol = "UNI-V2";
     uint8 public constant decimals = 18;
