@@ -187,9 +187,7 @@ contract FeeOnTransfer {
         return UniSwapV2Library.quote(amountA, reserveA, reserveB);
     }
 
-    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) public pure returns (uint256 amountOut) {
-        return UniSwapV2Library.getAmountOut(amountIn, reserveIn, reserveOut);
-    }
+  
 
     function getAmountIn(uint256 amountOut, uint256 reserveIn, uint256 reserveOut) public pure returns (uint256 amountIn) {
         return UniSwapV2Library.getAmountIn(amountOut, reserveIn, reserveOut);
