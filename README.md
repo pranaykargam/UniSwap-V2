@@ -400,23 +400,4 @@ TWAP          = price cumulative delta / time elapsed
 
 ## Connect
 
-<p>
-  <a href="https://x.com/pranaykargam">
-    <img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X / Twitter">
-  </a>
-  <a href="https://www.linkedin.com/in/sunny-eth-58ba22283/">
-    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-  </a>
-  <a href="https://discord.com/channels/810916927919620096/810916927919620099">
-    <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord">
-  </a>
-  <a href="https://github.com/pranaykargam?tab=repositories">
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-  </a>
-</p>
 
-<p>
-  Built with Solidity, Foundry, and curiosity.
-</p>
-
-</div>
