@@ -353,16 +353,7 @@ Some ERC-20 tokens take a fee whenever they are transferred, so the amount sent 
 
 The library keeps common AMM math and address logic outside the router contracts. It sorts token addresses, calculates deterministic pair addresses with `CREATE2`, reads reserves in the right token order, quotes prices, and calculates swap amounts.
 
-**Main helpers**
 
-- `sortTokens`
-- `pairFor`
-- `getReserves`
-- `quote`
-- `getAmountOut`
-- `getAmountIn`
-- `getAmountsOut`
-- `getAmountsIn`
 
 [Uniswap V2 library reference](https://docs.uniswap.org/contracts/v2/reference/smart-contracts/library)
 
